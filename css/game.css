@@ -1,0 +1,91 @@
+.game {
+    /* --ratio is set with Js on init */
+    --ratio-width: 9;
+    --ratio-height: 5;
+    aspect-ratio: var(--ratio-width) / var(--ratio-height);
+    display: grid;
+    grid-template-columns: repeat(var(--ratio-width), 1fr);
+    grid-template-rows: repeat(var(--ratio-height), 1fr);
+    min-width: 0;
+    max-width: 100%;
+    max-height: 100%;
+    margin-inline: auto;
+    position: relative;
+    background: #252525;
+    /* overflow: hidden; */
+}
+
+.walker {
+    --cell-size: calc(100% / 25);
+    --x: 12;
+    --y: 7;
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: var(--cell-size);
+    aspect-ratio: 1;
+    /* background: red; */
+    align-content: center;
+    font-size: 1.9vw;
+    text-align: center;
+    line-height: 0;
+    transform: translate(calc(100% * var(--x)),
+            calc(100% * var(--y)));
+    filter: hue-rotate(150deg) saturate(3) brightness(1.9) invert(0) contrast(1);
+    transition: all 0.1s linear;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.cell {
+    /* --background is set with Js */
+    /* --rotation is set with Js */
+    /* --background: red; */
+    --rotation: 0deg;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* box-shadow: inset 0 0 1px 0 rgba(255, 255, 255, 0.177) ; */
+
+    text-align: center;
+    font-size: 0.75em;
+    align-content: center;
+    color: #3c3c3c;
+    /* background: #121212; */
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: background 2s 0.3s ease, rotate 2s linear 2.3s, filter 2s 0.3s linear; 
+    
+    /* HACK TO HIDE TILE SEAM GAP */
+    transform: scale(1.01); 
+    
+
+    &:nth-child(even) {
+        background: hsl(0, 0%, 13.5%);
+        /* background: hsl(0, 0%, 30%); */
+    }
+
+    &.active {
+        background: var(--background);
+        rotate: var(--rotation);
+        background-size: cover;
+        box-shadow: none;
+    }
+
+    &:hover {
+        cursor: pointer;
+        box-shadow:  inset 0 0 0 5px #f3f3f326;
+        z-index: 1;
+    }
+
+    &.active[data-type="river"]{
+        filter: hue-rotate(170deg) brightness(1.5) contrast(1.3);
+        filter: hue-rotate(155deg) contrast(1.3) brightness(1.5);
+        filter: hue-rotate(155deg) contrast(1.3) brightness(1.5);
+    }
+    &.active[data-type="town"]{
+        filter: hue-rotate(340deg);
+        filter: grayscale(0.2) contrast(1.6) hue-rotate(340deg) brightness(1.1);
+    }
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/header-top.css">
+    <link rel="stylesheet" href="css/header-bottom.css">
+    <link rel="stylesheet" href="css/aside.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/footer.css">
+</head>
+
+<body>
+    <div class="header-top">
+        <div class="tile-selectors" id="tile-selectors">
+            <label class="road selector" for="road-selector" data-type="road">
+                <img src="images/sprites/road2/base.png" alt="">
+                <input type="radio" id="road-selector" name="selector" checked>
+                Road 
+            </label>
+            <label class="river selector" for="river-selector" data-type="river">
+                <img src="images/sprites/road2/base.png" alt="">
+                <input type="radio" id="river-selector" name="selector">
+                River
+            </label>
+            <label class="town selector" for="town-selector" data-type="town">
+                <img src="images/sprites/road2/base.png" alt="">
+                <input type="radio" id="town-selector" name="selector">
+                Town
+            </label>
+        </div>
+    </div>
+    <div class="header-bottom-left"></div>
+    <div class="header-bottom-right"></div>
+    <div class="aside-left"></div>
+    <div class="aside-right"></div>
+    <div class="game" id="game"></div>
+    <div class="footer"></div>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
