@@ -1,21 +1,18 @@
 import { CellController } from './cell-controller.js';
 import { CellManager } from './cell-manager.js'
 import { CellRenderer } from './cell-renderer.js';
-
 import { initTileSelector } from './tile-selector.js';
 import { inputStates } from './input-states.js';
 import { worldDefs, initWorldDefsCss } from './world-defs.js';
 
+
 const gameE = document.getElementById('game');
 initWorldDefsCss();
-
 const cells = new CellManager();
 const renderer = new CellRenderer();
 const controller = new CellController(cells, renderer, inputStates);
 initTileSelector(inputStates);
 renderer.initGrid(worldDefs);
-
-
 
 
 gameE.addEventListener('mousedown', (e) => {
@@ -45,23 +42,6 @@ gameE.addEventListener('mousemove', (e) => {
     }
 });
 
-
-function cellX(cellE) {
-    if (cellE) {
-        return Number(cellE.getAttribute('data-x'));
-    }
-    return false;
-}
-function cellY(cellE) {
-    if (cellE) {
-        return Number(cellE.getAttribute('data-y'));
-    }
-    return false;
-}
-function isCellNew(cellE) {
-    return cellE !== inputStates.lastHoveredCell;
-}
-
 function setCell(cellE) {
     const x = cellX(cellE);
     const y = cellY(cellE);
@@ -72,6 +52,20 @@ function setCell(cellE) {
     }
 }
 
+function isCellNew(cellE) {
+    return cellE !== inputStates.lastHoveredCell;
+}
 
+function cellX(cellE) {
+    if (cellE) {
+        return Number(cellE.getAttribute('data-x'));
+    }
+    return false;
+}
 
-
+function cellY(cellE) {
+    if (cellE) {
+        return Number(cellE.getAttribute('data-y'));
+    }
+    return false;
+}

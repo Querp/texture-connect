@@ -6,10 +6,9 @@ A tool for connecting and previewing texture tiles seamlessly.
 
 ## Planned Improvements
 
-- Decorated tiles
 - Support for 8 neigbors instead of 4
-- Rounded corners
-- More tile types
+- Textured tiles
+    - Road
     - Water
     - Towns
 - Animated tiles

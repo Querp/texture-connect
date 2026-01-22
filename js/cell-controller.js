@@ -1,3 +1,17 @@
+import { Connections } from "./connections.js";
+
+const DIRS = {
+    TOP: { dx: 0, dy: -1, label: "top" },
+    RIGHT: { dx: 1, dy: 0, label: "right" },
+    BOTTOM: { dx: 0, dy: 1, label: "bottom" },
+    LEFT: { dx: -1, dy: 0, label: "left" },
+
+    TOP_LEFT: { dx: -1, dy: -1, label: "top-left" },
+    TOP_RIGHT: { dx: 1, dy: -1, label: "top-right" },
+    BOTTOM_RIGHT: { dx: 1, dy: 1, label: "bottom-right" },
+    BOTTOM_LEFT: { dx: -1, dy: 1, label: "bottom-left" },
+};
+
 export class CellController {
     constructor(cellManager, renderer, inputStates) {
         this.cells = cellManager;
@@ -17,59 +31,106 @@ export class CellController {
     }
 
     updateCellAndNeighbors(x, y, active) {
-        const coords = [
-            [x, y],
-            [x, y - 1],
-            [x, y + 1],
-            [x - 1, y],
-            [x + 1, y],
-        ];
-
+        const connectionManager = new Connections(x, y);
         const isToBeSetActive = (active === 'add') ? true : false;
         const type = this.inputStates.selectedTile;
-
         this.renderer.setActive(x, y, isToBeSetActive);
         this.renderer.setDataType(x, y, type);
 
-        for (const [cx, cy] of coords) {
-            // only update neighbor if same type ? no, but maybe later
-            // const cellType = this.inputStates.selectedTile;
-            // if (this.cells.isCellOfType(cx, cy - 1, cellType)) continue
+        for (const [key, connection] of Object.entries(connectionManager.connections)) {
+            this.setConnections(connection);
+        }
 
-            const connections = this.getConnections(cx, cy);
-            if(connections === null) continue
-            this.renderer.setBackground(cx, cy, connections);
+        this.handleDiagonals(connectionManager);
+
+        for (const [key, connection] of Object.entries(connectionManager.connections)) {
+            const cx = connection.pos.x;
+            const cy = connection.pos.y;
+            this.renderer.setBackground(cx, cy, connection.connections);
         }
     }
 
-    getConnections(x, y) {
-        if (!this.cells.getCell(x, y)) return null;
+    setConnections(connection) {
+        const { x, y } = connection.pos;
 
+        // Only continue if neighbor is within grid
+        if (!this.cells.getCell(x, y)) return [];
+
+        // Only connect to neighbors of same type
         const cellType = this.cells.getCellType(x, y);
 
-        // Save connections as single digit 
-        // top = 1
-        // right = 2
-        // bottom = 4
-        // left = 8
+        for (const dir of Object.values(DIRS)) {
+            if (this.cells.isCellOfType(x + dir.dx, y + dir.dy, cellType)) {
+                connection.connections.push(dir.label);
+            }
+        }
 
-        // Then map digit to tile and rotation
-
-        let connectionsDigit = 0;
-
-        if (this.cells.isCellOfType(x, y - 1, cellType)) { // top
-            connectionsDigit += 1;
-        };
-        if (this.cells.isCellOfType(x + 1, y, cellType)) { // right
-            connectionsDigit += 2;
-        };
-        if (this.cells.isCellOfType(x, y + 1, cellType)) { // bottom
-            connectionsDigit += 4;
-        };
-        if (this.cells.isCellOfType(x - 1, y, cellType)) { // left
-            connectionsDigit += 8;
-        };
-
-        return connectionsDigit;
+        connection.connections.push('center');
     }
+
+    handleDiagonals(connectionManager) {
+        const DIAGONALS = {
+            0: "top-left",
+            2: "top-right",
+            4: "bottom-right",
+            6: "bottom-left"
+        };
+
+        for (const [neighborKey, connection] of Object.entries(connectionManager.connections)) {
+            // console.log(neighborKey, connection);
+
+            for (const [diagonalKey, diagonal] of Object.entries(DIAGONALS)) {
+                // console.log(neighborKey, diagonalKey, diagonal);
+                const hasDiagonal = connection.connections.includes(diagonal);
+                const isCenter = connection.label === "center";
+                
+                if (hasDiagonal && isCenter) {
+                    console.log(neighborKey, diagonalKey, hasDiagonal, connection);
+                    const neighborKey1 = (Number(diagonalKey) - 1 + 8) % 8;
+                    const neighborKey2 = (Number(diagonalKey) + 1 + 8) % 8;
+                    const nbAngleDigit1 = (Number(diagonalKey) + 2 + 8) % 8;
+                    const nbAngleDigit2 = (Number(diagonalKey) - 2 + 8) % 8;
+                    const nbAngleString1 = this.connectionDigitToString(nbAngleDigit1);
+                    const nbAngleString2 = this.connectionDigitToString(nbAngleDigit2);
+
+                    connectionManager.connections[neighborKey1].connections.push(`c-${nbAngleString1}`);
+                    connectionManager.connections[neighborKey2].connections.push(`c-${nbAngleString2}`);
+
+                    console.log('Diagonal connections:');
+                    console.log(connectionManager.connections[neighborKey1].connections);
+                    console.log(connectionManager.connections[neighborKey2].connections);
+                    // console.log(`${neighborKey1}(${nbAngleDigit1}/${nbAngleString1}), ${Number(diagonalKey)}, ${neighborKey2}(${nbAngleDigit2}/${nbAngleString2})`);
+                }
+            }
+        }
+    }
+
+    connectionDigitToString(digit) {
+        const strings = {
+            0: "top-left",
+            1: "top",
+            2: "top-right",
+            3: "right",
+            4: "bottom-right",
+            5: "bottom",
+            6: "bottom-left",
+            7: "left",
+        }
+        return strings[digit]
+    }
+
+    connectionStringToDigit(string) {
+        const digits = {
+            "top-left": 0,
+            "top": 1,
+            "top-right": 2,
+            "right": 3,
+            "bottom-right": 4,
+            "bottom": 5,
+            "bottom-left": 6,
+            "left": 7,
+        }
+        return digits[string]
+    }
+
 }

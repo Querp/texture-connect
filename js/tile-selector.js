@@ -1,5 +1,3 @@
-// import { inputStates } from "./input-states";
-
 export function initTileSelector(inputStates) {
     const selectorsE = document.getElementById('tile-selectors');
     selectorsE.addEventListener('change', (e) => {

@@ -1,6 +1,6 @@
 export const worldDefs = {
-    COLUMNS: 9,
-    ROWS: 5,
+    COLUMNS: 3,
+    ROWS: 3,
 }
 
 export function initWorldDefsCss(){

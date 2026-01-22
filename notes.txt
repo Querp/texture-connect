@@ -1,12 +1,8 @@
-do 8 neigbors instead of 4
-
-do round corners
-
+8 neigbors instead of 4
+tile textures
 more tile types
     road
     water
     towns
-
-how to remove corners of 4 connected
-
 animated tiles
+remove gaps when 4 tiles of same type are connected

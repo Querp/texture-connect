@@ -22,24 +22,15 @@ export class CellRenderer {
         const cellE = this.getCellElement(x, y);
         if (!cellE) return false
         cellE.setAttribute('data-type', type);
-
     }
 
     setBackground(x, y, connections) {
         if (connections == null) return
         const cellE = this.getCellElement(x, y);
         if (!cellE) return false
-
-        // Map connection number to tile (filename) and rotation
-        const tileName = mapConnectionDigitToTileName[connections];
-        // console.log(tileName.label);
-
-        if (!tileName) return
-        let bgString = `url("../images/sprites/road2/${tileName.label}.png")`;
-        const angle = `${tileName.angle}deg`;
-
+        
+        let bgString = createBgString(connections);
         cellE.style.setProperty('--background', bgString);
-        cellE.style.setProperty('--rotation', angle);
     }
 
     initGrid(worldDefs) {
@@ -50,33 +41,28 @@ export class CellRenderer {
                 cellE.classList.add('cell');
                 cellE.setAttribute('data-x', x);
                 cellE.setAttribute('data-y', y);
-                // cellE.textContent = `${x}:${y}`;
+                // cellE.textContent = `${x}, ${y}`;
                 gameE.appendChild(cellE);
             }
         }
     }
 }
 
-const mapConnectionDigitToTileName = {
-  0:  { label: 'base', angle: 0 },
+function createBgString(connections){
+    let bgString = ``;
+    if (connections.length === 0) return '';
+    // console.log(connections);
+    
+    for (let i = 0; i < connections.length; i++) {
+        const c = connections[i];
+        // console.log(c);
+        bgString += `url("../images/sprites/road/${c}.png"),`;
+    }
 
-  1:  { label: 'end', angle: 180 },
-  2:  { label: 'end', angle: 270 },
-  4:  { label: 'end', angle: 0 },
-  8:  { label: 'end', angle: 90 },
+    // remove trailing ","
+    bgString = bgString.slice(0, -1);
+    
+    // console.log(bgString);
+    return bgString
+}
 
-  5:  { label: 'straight', angle: 0 },   // top + bottom
-  10: { label: 'straight', angle: 90 },  // left + right
-
-  3:  { label: 'corner', angle: 270 },     // top + right
-  6:  { label: 'corner', angle: 0 },    // right + bottom
-  12: { label: 'corner', angle: 90 },   // bottom + left
-  9:  { label: 'corner', angle: 180 },   // left + top
-
-  7:  { label: 't', angle: 270 },           // missing left
-  11: { label: 't', angle: 180 },          // missing bottom
-  14: { label: 't', angle: 0 },         // missing right
-  13: { label: 't', angle: 90 },         // missing top
-
-  15: { label: 'cross', angle: 0 },
-};

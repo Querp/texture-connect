@@ -14,6 +14,7 @@ export class CellManager {
     getCell(x, y){
         return this.cells[`${x},${y}`] ?? null;
     }
+    
     getCellType(x, y){
         return this.cells[`${x},${y}`].type ?? null;
     }
@@ -33,10 +34,8 @@ export class CellManager {
         const key = `${x},${y}`;
         if (key in this.cells){
             delete this.cells[key];
-            // console.log(this.cells);
             return true;
         }
-        // console.log(this.cells);
         return false;
     }
 }
