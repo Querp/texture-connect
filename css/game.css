@@ -23,6 +23,7 @@
     color: #3c3c3c84;
     border: 0px solid hsla(0, 0%, 100%, 0);
     transition: border 0.15s ease;
+    filter: brightness(2.3) contrast(1.2);
 
     &::after {
         /* --background is set with Js on cell-click */
@@ -37,14 +38,16 @@
 
         /* Hack to hide seam gap */
         transform: scale(1.01);
+
+        
     }
 
     &:nth-child(even) {
-        background: hsl(0, 0%, 13.5%);
+        background: hsl(0, 0%, 10%);
     }
 
     &:hover {
-        background: hsl(0, 0%, 13.5%);
+        background: hsl(0, 0%, 15%);
         cursor: pointer;
         border: 0.5rem solid transparent;
         filter: brightness(2.5) contrast(1.2);
